@@ -1,0 +1,66 @@
+<VirtualHost *:80>
+    ServerName Site-Name
+    DocumentRoot /var/www/project
+
+    ProxyRequests Off
+    ProxyPreserveHost On
+    ProxyVia Full
+
+    <Proxy *>
+        Require all granted
+    </Proxy>
+
+    # Handle normal HTTP requests
+    ProxyPass / http://127.0.0.1:8000/
+    ProxyPassReverse / http://127.0.0.1:8000/
+
+    # Handle WebSocket requests
+    ProxyPass /socket.io/ http://127.0.0.1:8000/socket.io/ retry=0
+    ProxyPassReverse /socket.io/ http://127.0.0.1:8000/socket.io/
+
+    # Enable WebSocket support
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule /socket.io/(.*) ws://127.0.0.1:8000/socket.io/$1 [P,L]
+
+    <Directory "/var/www/project" >
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@example.com
+    ServerName Site-Name
+    DocumentRoot /var/www/project
+
+    ProxyRequests Off
+    ProxyPreserveHost On
+    ProxyVia Full
+
+    <Proxy *>
+        Require all granted
+    </Proxy>
+
+    # Handle normal HTTP requests
+    ProxyPass / http://127.0.0.1:8000/
+    ProxyPassReverse / http://127.0.0.1:8000/
+
+    # Handle WebSocket requests
+    ProxyPass /socket.io/ http://127.0.0.1:8000/socket.io/ retry=0
+    ProxyPassReverse /socket.io/ http://127.0.0.1:8000/socket.io/
+
+    # Enable WebSocket support
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule /socket.io/(.*) ws://127.0.0.1:8000/socket.io/$1 [P,L]
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
