@@ -1,8 +1,17 @@
+# SignIn to Server
+
+```
+ssh ubuntu@<Ip_address>
+
+```
+-> enter required pass code to login to server.
+
 # install Apache2 
 ```
 sudo apt install apache2
 
 ```
+-> Don't install Apache2 on local Machine. 
 
 # check Apache2 Status
 ```sudo systemctl status apache2``` 
@@ -52,3 +61,10 @@ touch abobakar.me.conf
 
 # restart apache2
 ```sudo systemctl restart apache2```
+
+
+# Remove Apache2
+```
+sudo apt remove --purge apache^C
+
+```
